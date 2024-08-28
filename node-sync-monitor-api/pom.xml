@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>node-sync-monitor</artifactId>
+        <groupId>com.ericsson.oss.services.nodesyncmonitor</groupId>
+        <version>1.9.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>node-sync-monitor-api</artifactId>
+    <name>[${project.parent.artifactId}] API module</name>
+
+    <properties>
+        <version.javax.validation>1.1.0.Final-redhat-1</version.javax.validation>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jboss.as.plugins</groupId>
+                <artifactId>jboss-as-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Basic dependency for JEE applications, as defined in Java EE Specification APIs -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Dependencies to Service Framework API modules (like sdk-xxx-api) can be added here for compilation purpose only. 
+            Only add those Service Framework API dependencies which are used in this project module, and they must be marked as "provided" 
+            scope. -->
+        <!-- Dependencies to Service Framework implementation modules (like sdk-xxx) must not be added here. -->
+
+    </dependencies>
+</project>

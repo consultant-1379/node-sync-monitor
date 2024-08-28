@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>node-sync-monitor</artifactId>
+        <groupId>com.ericsson.oss.services.nodesyncmonitor</groupId>
+        <version>1.9.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>ERICnodesyncmonitormodel_CXP9042737</artifactId>
+    <name>[${project.parent.artifactId}] RPM model module</name>
+    <packaging>${rpm.packaging}</packaging>
+
+    <properties>
+        <publish_artifact>true</publish_artifact>
+        <media.category>model</media.category>
+        <com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+        <install-path>ERICmodeldeployment/data/install</install-path>
+        <rpm-root>var</rpm-root>
+        <comp-name>opt/ericsson</comp-name>
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Copy models</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.parent.artifactId}-model-xml-jar</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target/${install-path}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <copyright>2022 Ericsson AB All rights reserved</copyright>
+                    <name>${project.artifactId}</name>
+                    <versionProperty>${project.version}</versionProperty>
+                    <summary>${stripped.artifactId}</summary>
+                    <packager>${ericsson.rstate}</packager>
+                    <group>ERI-NMS</group>
+                    <vendor>Ericsson AB</vendor>
+                    <url>www.ericsson.com</url>
+                    <mappings combine.self="override">
+                        <mapping>
+                            <directory>/${rpm-root}/${comp-name}</directory>
+                            <filemode>775</filemode>
+                            <username>mdtuser</username>
+                            <groupname>mdt</groupname>
+                        </mapping>
+
+                        <mapping>
+                            <!-- MDT requires JARs to be dropped off in this location -->
+                            <directory>/${rpm-root}/${comp-name}/${install-path}</directory>
+                            <filemode>775</filemode>
+                            <!-- This directory should only be accessed through ‘mdtuser’ -->
+                            <username>mdtuser</username>
+                            <groupname>mdt</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>true</recurseDirectories>
+                            <dependency>
+                                <excludes>
+                                    <exclude>${project.groupId}:${project.parent.artifactId}-api-jar</exclude>
+                                </excludes>
+                            </dependency>
+                            <sources>
+                                <source>
+                                    <location>target/${install-path}</location>
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+
+                                </source>
+                            </sources>
+                        </mapping>
+
+                        <mapping>
+                            <directory>/${rpm-root}/${comp-name}/${install-path}</directory>
+                            <filemode>775</filemode>
+                            <username>mdtuser</username>
+                            <groupname>mdt</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>true</recurseDirectories>
+                            <dependency>
+                                <excludes>
+                                    <exclude>${project.groupId}:${project.parent.artifactId}-api-jar</exclude>
+                                </excludes>
+                            </dependency>
+                            <sources>
+                                <source>
+                                    <location>src/main/python</location>
+                                    <excludes>
+                                        <exclude>**/*.pyc</exclude>
+                                        <exclude>**/*.gitignore</exclude>
+                                        <exclude>**/*.py</exclude>
+                                        <exclude>**/README</exclude>
+                                        <exclude>**/README.txt</exclude>
+                                    </excludes>
+                                </source>
+                                <source>
+                                    <location>src/main/resources/</location>
+                                    <excludes>
+                                        <exclude>**/*.pyc</exclude>
+                                        <exclude>**/version.txt</exclude>
+                                        <exclude>**/*.gitignore</exclude>
+                                        <exclude>**/ETF.xml</exclude>
+                                        <exclude>**/*.sql</exclude>
+                                        <exclude>**/README</exclude>
+                                        <exclude>**/README.txt</exclude>
+                                    </excludes>
+                                </source>
+                                <source>
+                                    <location>src/main/scripts/</location>
+                                    <excludes>
+                                        <exclude>**/*.pyc</exclude>
+                                        <exclude>**/postinstall.sh</exclude>
+                                        <exclude>**/preremove.sh</exclude>
+                                        <exclude>**/postremove.sh</exclude>
+                                        <exclude>**/*.gitignore</exclude>
+                                        <exclude>**/README</exclude>
+                                        <exclude>**/README.txt</exclude>
+                                    </excludes>
+                                </source>
+                            </sources>
+                        </mapping>
+                    </mappings>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.ericsson.oss.itpf.deployment</groupId>
+                <artifactId>deployment-descriptor-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>configurable-entity</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configEntity>
+                        <stereotype>MODEL_PKG</stereotype>
+                        <parameters>
+                            <itemType name="model-package">
+                                <property name="name" defaultValue="ERICnodesyncmonitormodel_CXP9042737" />
+                            </itemType>
+                        </parameters>
+                    </configEntity>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

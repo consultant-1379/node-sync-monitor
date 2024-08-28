@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <artifactId>node-sync-monitor</artifactId>
+        <groupId>com.ericsson.oss.services.nodesyncmonitor</groupId>
+        <version>1.9.2-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>ERICnodesyncmonitorservice_CXP9042735</artifactId>
+    <name>[${project.parent.artifactId}] RPM service module</name>
+    <packaging>${rpm.packaging}</packaging>
+
+    <properties>
+        <publish_artifact>true</publish_artifact>
+        <media.category>service</media.category>
+        <com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+        <install-path>${project.parent.groupId}.${project.parent.artifactId}</install-path>
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>${project.parent.artifactId}-ear</artifactId>
+            <version>${project.version}</version>
+            <type>ear</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>5.3.0</version>
+                <configuration>
+                    <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
+                    <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+                    <skipProvidedScope>true</skipProvidedScope>
+                    <skipRuntimeScope>true</skipRuntimeScope>
+                    <failBuildOnCVSS>1</failBuildOnCVSS>
+                    <suppressionFiles>
+                        <suppressionFile>${project.parent.basedir}/owasp-dependency-check-suppression.xml</suppressionFile>
+                    </suppressionFiles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <configuration>
+                    <mappings>
+                        <mapping>
+                            <directory>${vm.install-path}</directory>
+                            <filemode>550</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>false</recurseDirectories>
+                            <sources>
+                              <source>
+                              <location>src/main/scripts</location>
+                               <excludes>
+                                   <exclude>**/*.txt</exclude>
+                                </excludes>
+                              </source>
+                            </sources>
+                            <dependency>
+                                <includes>
+                                    <include>${project.parent.groupId}:${project.parent.artifactId}-ear</include>
+                                </includes>
+                            </dependency>
+                        </mapping>
+                    </mappings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

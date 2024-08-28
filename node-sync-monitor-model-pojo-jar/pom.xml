@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>node-sync-monitor</artifactId>
+        <groupId>com.ericsson.oss.services.nodesyncmonitor</groupId>
+        <version>1.9.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>node-sync-monitor-model-pojo-jar</artifactId>
+    <name>[${project.artifactId}]</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+            <artifactId>modeling-annotation-processor-jar</artifactId>
+            <version>${version.modeling.annotation.processor}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion> 
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-model</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-plugin-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-artifact</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+                <artifactId>modeling-annotation-processor-jar</artifactId>
+                <version>${version.modeling.annotation.processor}</version>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>annoproc</goal>
+                        </goals>
+                        <configuration>
+                            <classesRoot>${project.build.directory}/classes</classesRoot>
+                            <modelBuildDir>${project.build.directory}/generated-models/modeling</modelBuildDir>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

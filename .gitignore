@@ -1,0 +1,64 @@
+# Compiled source #
+*.class
+*/bin/*
+
+# Eclipse files
+.project
+.classpath
+.settings
+.metadata
+
+# IntelliJ IDEA files
+.idea
+*.iws
+*.ipr
+*.iml
+
+# Spock Generated Reports
+*/build/*
+
+# Test output files
+*/test-output/*
+/test-output/
+/test-output
+test-output/
+test-output/**/*
+*/test-output/**/*
+
+# Packages
+*.jar
+
+# Maven build files
+target
+reports
+application.properties
+
+
+# PMD
+.pmd
+
+# Merge files
+*.orig
+
+#tmp irectories
+tmp/
+test-output/
+
+# Windows binaries
+*.exe
+*.dll
+
+
+# Output files
+*.log
+
+
+# Git merge files
+*.orig
+
+# Checkstyle reports
+*.checkstyle
+
+# PMD reports
+*.pmd
+
